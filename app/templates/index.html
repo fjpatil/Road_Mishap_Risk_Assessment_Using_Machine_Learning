@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang='en'>
+	<head>
+		<meta charset="utf-8"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1"> 
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<style>
+			h1 {
+			    text-align: center;
+			    color: #4CAF50;
+			}
+			h3 {
+			    text-align: center;
+			}
+			.button {
+			  display: inline-block;
+			  padding: 11px 25px;
+			  font-size: 24px;
+			  cursor: pointer;
+			  text-align: center;
+			  text-decoration: none;
+			  outline: none;
+			  color: #fff;
+			  background-color: #4CAF50;
+			  border: none;
+			  border-radius: 15px;
+			  box-shadow: 0 9px #999;
+			  position:relative;
+			  top:50%; 
+    		  
+			  /*margin: 0 auto;*/
+			}
+
+			.button:hover {background-color: #3e8e41}
+
+			.button:active {
+			  background-color: #3e8e41;
+			  box-shadow: 0 5px #666;
+			  transform: translateY(4px);
+			}
+		</style>
+			<script type="text/javascript">
+				function ConvertFormToJSON(form){
+					var array = jQuery(form).serializeArray();
+					var json = {};
+				
+					jQuery.each(array, function() {
+						json[this.name] = this.value || '';
+					   });
+				
+					return json;
+				}
+					$(function() {
+				$('button').click(function(e) {
+					e.preventDefault()
+					var json = ConvertFormToJSON($('form'));
+					console.log(json)
+					$.ajax({
+						url: '/predict',
+						data: JSON.stringify(json),
+						  dataType: "json",
+						type: 'POST',
+						contentType: "application/json",
+						success: function(response) {
+							console.log(response);
+							alert("Accident Severity is predicted as:"+response.result)
+							document.getElementById('pred').innerHTML = response.result
+						},
+						error: function(error) {
+							console.log(error);
+						}
+					});
+				});
+			});
+			 
+				</script>
+	</head>
+	<body background="/background.jpg">
+		<div class='container'>
+			<div class='row'>
+				<h1>Accident Severity Prediction</h1><br>
+				<h3>Prediction: <mark id='pred'>None</mark></h3>
+				<form>
+					<div class="form-group">
+						<label>Carriageway Hazards:&nbsp;&nbsp;</label>
+
+							<input type="radio"
+								   name="Carriageway_Hazards"
+								   value="1" 
+								   checked /> Present
+							<input type="radio"
+								   name="Carriageway_Hazards"
+								   value="0" /> None
+					  
+					</div> 
+
+					<div class="form-group">
+						<label>Light Conditions:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+
+						<input type="radio"
+							name="Light_Conditions"
+							value="1" 
+							checked /> Light present
+				 		<input type="radio"
+							name="Light_Conditions"
+							value="0" /> Darkness
+					  
+					</div> 
+
+					<div class="form-group">
+
+						<label>Day of Week</label>
+							<select class="form-control" name="Day_of_Week">
+								<option value="1">Sunday</option>
+								<option value="0">Monday</option>
+								<option value="0">Tuesday</option>
+								<option value="0">Wednesday</option>
+								<option value="0">Thursday</option>
+								<option value="0">Friday</option>
+								<option value="1">Saturday</option>
+							</select>
+					</div> 
+					<div class="form-group">
+						<label >Special conditions at site</label>
+							<select class="form-control" name="Special_Conditions_at_Site">
+								<option value="1">Auto signal part defective</option>
+								<option value="1">Road sign or marking defective or obscured</option>
+								<option value="1">Auto traffic signal - out</option>
+								<option value="1">Road surface defective</option>
+								<option value="1">Mud</option>
+								<option value="1">Oil or diesel</option>
+								<option value="1">Roadworks</option>
+								<option value="0">None</option>
+							</select>
+					</div>
+					<div class="form-group">
+						<label>Road class</label>
+						<select class="form-control" name="1st_Road_Class">
+								<option value="1">A</option>
+								<option value="2">B</option>
+								<option value="3">C</option>
+								<option value="4">Motorway</option>
+								<option value="1">Unclassified</option>
+							</select>
+					</div>
+					<div class="form-group">
+						<label>Junction Control</label>
+							<select class="form-control" name="Junction_Control">
+								<option value="1">Give way or uncontrolled</option>
+								<option value="2">Auto traffic signal</option>
+								<option value="3">Not at junction or within 20 metres</option>
+								<option value="4">Stop sign</option>
+								<option value="5">Authorised person</option>
+							</select>
+					</div>
+					<div class="form-group">
+						<label>Junction Details</label>
+							<select class="form-control" name="Junction_Detail">
+								<option value="1">Not at junction or within 20 metres</option>
+								<option value="2">T or staggered junction</option>
+								<option value="3">Crossroads</option>
+								<option value="4">Roundabout</option>
+								<option value="5">Private drive or entrance</option>
+								<option value="6">Other junction</option>
+								<option value="7">Slip road</option>
+								<option value="8">More than 4 arms (not roundabout)</option>
+								<option value="9">Mini-roundabout</option>
+							</select>
+					</div>
+
+					<div class="form-group">
+						<label>Road Surface Conditions</label>
+							<select class="form-control" name="Road_Surface_Conditions">
+								<option value="1">Dry</option>
+								<option value="2">Wet or damp</option>
+								<option value="3">Frost or ice</option>
+								<option value="4">Snow</option>
+								<option value="5">Flood over 3cm. deep</option>
+							</select>
+					</div>
+
+
+					<div class="form-group">
+						<label>Road Type</label>
+							<select class="form-control" name="Road_Type">
+								<option value="1">Single carriageway</option>
+								<option value="2">Dual carriageway</option>
+								<option value="3">Roundabout</option>
+								<option value="4">One way street</option>
+								<option value="5">Slip road</option>
+							</select>
+					</div>
+
+					<div class="form-group">
+						<label>Area: &nbsp;&nbsp;</label>
+
+						<input type="radio"
+							name="Urban_or_Rural_Area"
+							value="1" 
+							checked /> Urban
+				 		<input type="radio"
+							name="Urban_or_Rural_Area"
+							value="2" /> Rural
+					  
+					</div> 
+
+					<div class="form-group">
+						<label>Weather Conditions</label>
+							<select class="form-control" name="Weather_Conditions">
+								<option value="1">Fine no high winds</option>
+								<option value="2">Raining no high winds</option>
+								<option value="3">Raining + high winds</option>
+								<option value="4">Fine + high winds</option>
+								<option value="5">Snowing no high winds</option>
+								<option value="6">Fog or mist</option>
+								<option value="7">Snowing + high winds</option>
+							</select>
+					</div>
+
+					<div class="form-group">
+						<label>Speed Limit</label>
+							<select class="form-control" name="Speed_limit">
+								<option value="10.0">10.0</option>
+								<option value="15.0">15.0</option>
+								<option value="20.0">20.0</option>
+								<option value="30.0">30.0</option>
+								<option value="40.0">40.0</option>
+								<option value="50.0">50.0</option>
+								<option value="60.0">60.0</option>
+								<option value="70.0">70.0</option>
+							</select>
+					</div>
+
+					<div class="form-group">
+						<label>Time:&nbsp;&nbsp;</label>
+						<input type="radio"
+							name="Time"
+							value="1"
+							checked  /> Day
+						<input type="radio"
+							name="Time"
+							value="2" /> Night
+					  
+					</div> 
+
+					<div class="col text-center">
+						<button type="submit" class="button btn-default" id='submit'>Predict Accident Severity</button>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</body>
+</html>
