@@ -52,3 +52,7 @@ This topic introduces the possibility of road accidents severity based on the pr
 
 # Dataset Link : https://www.kaggle.com/tsiaras/uk-road-safety-accidents-and-vehicles
 
+# Web UI Preview:
+
+ ![](images/Preview_1.jpg)
+ ![](images/Preview_2.jpg)
